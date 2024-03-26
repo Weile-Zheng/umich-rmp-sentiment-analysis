@@ -4,47 +4,48 @@ import pandas as pd
 import altair as alt
 
 # Page title
-st.set_page_config(page_title='Interactive Data Explorer', page_icon='📊')
-st.title('📊 Interactive Data Explorer')
+st.set_page_config(page_title='UMICH Rate My Professor Sentiment Data', page_icon='📈')
+st.title('🧠 Interactive Data Explorer')
+st.subheader('UMICH Rate My Professor Sentiment Analysis')
 
 with st.expander('About this app'):
   st.markdown('**What can this app do?**')
-  st.info('This app shows the use of Pandas for data wrangling, Altair for chart creation and editable dataframe for data interaction.')
+  st.info('This app provides visualization and interaction with our processed dataset webscraped from Ratemyprofessor.com')
   st.markdown('**How to use the app?**')
-  st.warning('To engage with the app, 1. Select genres of your interest in the drop-down selection box and then 2. Select the year duration from the slider widget. As a result, this should generate an updated editable DataFrame and line plot.')
+  st.warning("Select desired data information with the dropdown menu and checkboxes")
   
-st.subheader('Which Movie Genre performs ($) best at the box office?')
+st.subheader('Course Review')
 
 # Load data
-df = pd.read_csv('data/movies_genres_summary.csv')
-df.year = df.year.astype('int')
+course_review = pd.read_csv('data/course_review_polarity_emotion_merged.csv')
 
 # Input widgets
-## Genres selection
-genres_list = df.genre.unique()
-genres_selection = st.multiselect('Select genres', genres_list, ['Action', 'Adventure', 'Biography', 'Comedy', 'Drama', 'Horror'])
-
-## Year selection
-year_list = df.year.unique()
-year_selection = st.slider('Select year duration', 1986, 2006, (2000, 2016))
-year_selection_list = list(np.arange(year_selection[0], year_selection[1]+1))
-
-df_selection = df[df.genre.isin(genres_selection) & df['year'].isin(year_selection_list)]
-reshaped_df = df_selection.pivot_table(index='year', columns='genre', values='gross', aggfunc='sum', fill_value=0)
-reshaped_df = reshaped_df.sort_values(by='year', ascending=False)
+## Course selection
+course_list = course_review["class"].unique()
+course_selection = st.multiselect('Select course', course_list)
+include_comment = st.checkbox("Include original comment")
+include_emotion = st.checkbox("Include emotion labels")
 
 
 # Display DataFrame
+# Display DataFrame
+selected = course_review[course_review["class"].isin(course_selection)]
 
-df_editor = st.data_editor(reshaped_df, height=212, use_container_width=True,
-                            column_config={"year": st.column_config.TextColumn("Year")},
-                            num_rows="dynamic")
-df_chart = pd.melt(df_editor.reset_index(), id_vars='year', var_name='genre', value_name='gross')
+
+if not include_comment:
+    selected = selected.drop(columns="comment")
+
+if not include_emotion:
+    selected = selected.drop(columns=["emotion1", "emotion2", "emotion3"])
+
+df = st.dataframe(selected, height=212, use_container_width=True)
+
+expander = st.expander("See explanation")
+expander.write("""Polarity Score: This is a numerical value that represents the 
+                       sentiment of a text on a scale, typically from -1 to 1. A polarity 
+                       score of -1 represents extremely negative sentiment, a score of 1
+                        represents extremely positive sentiment, and a score of 0 represents
+                        neutral sentiment. This score is calculated using [this](https://huggingface.co/distilbert/distilbert-base-uncased-finetuned-sst-2-english) instance of DistilBERT Transformer model.
+""")
 
 # Display chart
-chart = alt.Chart(df_chart).mark_line().encode(
-            x=alt.X('year:N', title='Year'),
-            y=alt.Y('gross:Q', title='Gross earnings ($)'),
-            color='genre:N'
-            ).properties(height=320)
-st.altair_chart(chart, use_container_width=True)
