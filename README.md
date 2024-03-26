@@ -8,7 +8,7 @@ Project Leads: Weile Zheng, Patrick Wang
 
 ## Demo App
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://interactive-data-explorer-template.streamlit.app/)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)]()
 
 ## Full Team List
 Alberto Falkon Soued, Alex Matrajt Frid, Andrew Chen, Anne Cao, Braxton Orban, Connor Tivadar, Irene Choi, Jared Samson
