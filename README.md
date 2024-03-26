@@ -8,20 +8,6 @@ Project Leads: Weile Zheng, Patrick Wang
 
 ## Demo App
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)]()
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://umich-rmp.streamlit.app/)
 
-## Full Team List
-Alberto Falkon Soued, Alex Matrajt Frid, Andrew Chen, Anne Cao, Braxton Orban, Connor Tivadar, Irene Choi, Jared Samson
-, Jianhan Zhang
-, Jordyn Ives
-, Judith Wu
-, Justin Hirsch
-, Linda Ru
-, Noah Chang
-, Rachel Ding
-, Sam Moon
-, Searen Da
-, Shruti Swaminathan
-, Simon Zainea
-, Tingwei Yang
-, Yishan Lin 
+
