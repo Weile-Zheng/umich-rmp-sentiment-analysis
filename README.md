@@ -2,7 +2,7 @@
 
 Final demo from MDST [WN24 RMP Sentiment Analysis Project](https://github.com/MichiganDataScienceTeam/WN2024-RMP). 
 
-Learn more about [MDST](mdst.club)
+Learn more about [MDST](https://mdst.club)
 
 Project Leads: Weile Zheng, Patrick Wang
 
