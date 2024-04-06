@@ -1,7 +1,5 @@
 import streamlit as st
-import numpy as np
 import pandas as pd
-import altair as alt
 
 # Page title
 st.set_page_config(page_title='UMICH Rate My Professor Sentiment Data', page_icon='📈')
@@ -17,7 +15,7 @@ with st.expander('About this app'):
 st.subheader('Course Review')
 
 # Load data
-course_review = pd.read_csv('data/course_review_polarity_emotion_merged.csv')
+course_review = pd.read_csv('./data/course_review_polarity_emotion_merged.csv')
 
 # Input widgets
 ## Course selection
@@ -28,7 +26,6 @@ include_emotion = st.checkbox("Include emotion labels")
 
 
 # Display DataFrame
-# Display DataFrame
 selected = course_review[course_review["class"].isin(course_selection)]
 
 
@@ -38,14 +35,21 @@ if not include_comment:
 if not include_emotion:
     selected = selected.drop(columns=["emotion1", "emotion2", "emotion3"])
 
-df = st.dataframe(selected, height=212, use_container_width=True)
+st.dataframe(selected, height=212, use_container_width=True)
 
 expander = st.expander("See explanation")
-expander.write("""Polarity Score: This is a numerical value that represents the 
+
+# Add sentiment column based on polarity_score
+selected['sentiment'] = selected['polarity_score'].apply(lambda x: 'Positive' if x > 0 else ('Negative' if x < 0 else 'Neutral'))
+
+# Display bar chart of sentiment counts
+st.bar_chart(selected['sentiment'].value_counts())
+
+expander.info("""Polarity Score: This is a numerical value that represents the 
                        sentiment of a text on a scale, typically from -1 to 1. A polarity 
                        score of -1 represents extremely negative sentiment, a score of 1
                         represents extremely positive sentiment, and a score of 0 represents
-                        neutral sentiment. This score is calculated using [this](https://huggingface.co/distilbert/distilbert-base-uncased-finetuned-sst-2-english) instance of DistilBERT Transformer model.
-""")
+                        neutral sentiment. The score is calculated using [this] (https://huggingface.co/distilbert/distilbert-base-uncased-finetuned-sst-2-english) 
+               instance of DistilBERT Transformer model.""")
 
 # Display chart
